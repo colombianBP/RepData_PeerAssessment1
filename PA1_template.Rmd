@@ -5,7 +5,10 @@ output:
     keep_md: true
 ---
 
-
+```{r,echo=FALSE,results='hide',warning=FALSE}
+library(ggplot2)
+library(gridExtra)
+```
 ## Loading and preprocessing the data saving dates as date a date object
 Removing NA's, and transforming the dates to a date object.
 ```{r}
@@ -22,8 +25,9 @@ Finding and plotting the number of steps per day.
 data2<-aggregate(data$steps,by=list(date=data$date),FUN=sum,na.rm=T)
 g<-ggplot(data=data2,aes(x=date,y=x))
 g+geom_bar(stat = 'identity')+labs(x='date',y='Number of steps',title='Total number of steps per day')
-```
-The mean for the total steps per day is `{r} mean(data2$x)` and the median is `{r} median(data2$x)`
+```  
+
+The mean for the total steps per day is `r mean(data2$x)` and the median is `r median(data2$x)`  
 
 
 ## What is the average daily activity pattern?
@@ -32,8 +36,9 @@ Finding and plotting the average number of steps per interval.
 data3<-aggregate(data$steps,by=list(interval=data$interval),FUN=mean)
 p<-ggplot(data=data3,aes(x=interval,y=x))
 p+geom_line()+labs(x='Time interval',y='Number of steps',title='Averaged number of steps for each interval')
-```
-the interval that registered the highest number of steps taken on average is interval `{r} data3$interval[data3$x==max(data3$x)]`
+```  
+
+the interval that registered the highest number of steps taken on average is interval `r data3$interval[data3$x==max(data3$x)]`  
 
 ## Imputing missing values
 calculating the total number of NA's
@@ -62,9 +67,12 @@ Plotting the total number of steps each day
 data21<-aggregate(data1$steps,by=list(date=data1$date),FUN=sum,na.rm=T)
 g<-ggplot(data=data21,aes(x=date,y=x))
 g+geom_bar(stat = 'identity')+labs(x='date',y='Number of steps',title='Total number of steps per day')
-```
-The mean for the total steps per day is `{r} mean(data21$x)` and the median is `{r} median(data21$x)`. As we can see, while the mean stayed the same, the median had a sligth decrease. 
-## Are there differences in activity patterns between weekdays and weekends?
+```  
+
+The mean for the total steps per day is `r mean(data21$x)` and the median is `r median(data21$x)`. As we can see, while the mean stayed the same, the median had a sligth decrease.  
+
+## Are there differences in activity patterns between weekdays and weekends?  
+
 Creating a factor variable to separate the data between weekdays and weekends
 ```{r}
 weekday<-c("Monday","Tuesday","Wednesday","Thursday","Friday")
@@ -81,7 +89,8 @@ data$daytype<-as.factor(daytype)
 datas<-split(data,daytype)
 dataweek<-aggregate(datas[[1]]$steps,by=list(interval=datas[[1]]$interval),FUN=mean)
 dataend<-aggregate(datas[[2]]$steps,by=list(interval=datas[[2]]$interval),FUN=mean)
-```
+```  
+
 And now plotting to see the difference on the total steps for each interval in weekdays vs weekends
 ```{r}
 p2<-ggplot(data=dataweek,aes(x=interval,y=x))+geom_line()
@@ -90,4 +99,3 @@ p3<-ggplot(data=dataend,aes(x=interval,y=x))+geom_line()
 p3<-p3+labs(x='Time interval',y='Number of steps',title='Weekend averaged number of steps for each interval')
 grid.arrange(p2,p3,ncol=1)
 ```
-
